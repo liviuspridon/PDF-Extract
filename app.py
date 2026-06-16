@@ -41,6 +41,12 @@ if uploaded_file:
                         full_row = [filename_stem] + row
 
                     for c_idx, value in enumerate(full_row, start=1):
+                        if r_idx > 1:
+                            try:
+                                num = float(value)
+                                value = int(num) if num == int(num) else num
+                            except (ValueError, TypeError):
+                                pass
                         cell = ws.cell(row=r_idx, column=c_idx, value=value)
                         if r_idx == 1:
                             cell.font = header_font
