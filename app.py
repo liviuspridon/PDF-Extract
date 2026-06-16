@@ -1,7 +1,7 @@
 import streamlit as st
 import zipfile
 import io
-from extract_tables import main as extract_tables
+from extract_tables import extract_tables
 
 st.set_page_config(page_title="PDF Table Extractor", page_icon="📄")
 
