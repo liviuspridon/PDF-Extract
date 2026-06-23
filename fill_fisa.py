@@ -43,11 +43,15 @@ def fill_fisa(pdf_path, out_path=None, template_path=None):
         for i, row in enumerate(plat[1:], start=2):  # skip header
             # row = [Pos, Material, Starke, Stuck, Lange, Breite, ...]
             _, material, starke, stuck, lange, breite = row[0], row[1], row[2], row[3], row[4], row[5]
+            vk_qm = row[16] if len(row) > 16 else None
+            summe = row[17] if len(row) > 17 else None
             ws.cell(row=i, column=1).value = material       # A
             ws.cell(row=i, column=2).value = _num(starke)   # B Grosime
             ws.cell(row=i, column=3).value = _num(stuck)    # C Cant
             ws.cell(row=i, column=4).value = _num(lange)    # D Lung
             ws.cell(row=i, column=5).value = _num(breite)   # E Lat
+            ws.cell(row=i, column=16).value = _num(vk_qm)  # P VK qm
+            ws.cell(row=i, column=17).value = _num(summe)   # Q Summe
         print(f"Deco: wrote {len(plat)-1} rows")
 
     # ── CANT (from Material pentru margini) ──────────────────────
