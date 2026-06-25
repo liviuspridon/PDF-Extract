@@ -1,7 +1,6 @@
 import streamlit as st
 import io
 import os
-import shutil
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from extract_tables import extract_tables
@@ -12,6 +11,38 @@ TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "_FIsa_Prototip.xlsx")
 st.set_page_config(page_title="PDF Table Extractor", page_icon="📄")
 st.title("📄 Mengenkalkulation Extractor")
 
+# ── Câmpuri antet ─────────────────────────────────────────────
+st.subheader("Date proiect")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    client      = st.text_input("Client")
+    titlu       = st.text_input("Titlu proiect")
+    nr_proiect  = st.text_input("Nr. proiect")
+    data        = st.date_input("Data")
+
+with col2:
+    tip_proiect   = st.selectbox("Tip proiect", ["", "Mobilier în Roomdesigner", "Debitare căntuire"])
+    tip_solicitare = st.selectbox("Tip solicitare", ["", "Ofertă", "Comandă (cu work preparation)"])
+    preluat_de    = st.selectbox("Preluat de", ["", "Dan Slotea", "David Constantin", "Iulian Necula",
+                                                 "Liliana Chiriță", "Adrian Mărgărit", "Denisa Manea"])
+    proiectat_de  = st.selectbox("Proiectat de", ["", "Client", "Plan M"])
+
+antet = {
+    "B3": client,
+    "B4": titlu,
+    "B5": nr_proiect,
+    "B6": str(data),
+    "I3": tip_proiect,
+    "I4": tip_solicitare,
+    "I5": preluat_de,
+    "I6": proiectat_de,
+}
+
+st.divider()
+
+# ── Upload PDF ────────────────────────────────────────────────
 uploaded_file = st.file_uploader("Încarcă PDF-ul", type="pdf")
 
 if uploaded_file:
@@ -23,16 +54,15 @@ if uploaded_file:
             tmp_pdf = "/tmp/input.pdf"
             with open(tmp_pdf, "wb") as f:
                 f.write(uploaded_file.read())
-
             tables = extract_tables(tmp_pdf, "/tmp")
 
         st.success("Extragere finalizată!")
 
-        # ── Download Fisa completata ──────────────────────────────
+        # ── Fișa completată ───────────────────────────────────
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
                 out_fisa = f"/tmp/{filename_stem}_fisa.xlsx"
-                fill_fisa(tmp_pdf, out_fisa, TEMPLATE_PATH)
+                fill_fisa(tmp_pdf, out_fisa, TEMPLATE_PATH, antet=antet)
             with open(out_fisa, "rb") as f:
                 st.download_button(
                     label="⬇️ Descarcă Fișa Completată",
@@ -43,7 +73,7 @@ if uploaded_file:
         else:
             st.warning("Template _FIsa_Prototip.xlsx nu a fost găsit în repository.")
 
-        # ── Download Excel cu toate tabelele ─────────────────────
+        # ── Excel cu toate tabelele ───────────────────────────
         with st.spinner("Se generează Excel..."):
             wb = Workbook()
             wb.remove(wb.active)

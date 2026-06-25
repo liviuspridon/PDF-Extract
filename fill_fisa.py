@@ -20,7 +20,7 @@ from extract_tables import extract_tables
 TEMPLATE = os.path.join(os.path.dirname(__file__), "_FIsa_Prototip.xlsx")
 
 
-def fill_fisa(pdf_path, out_path=None, template_path=None):
+def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None):
     if template_path is None:
         template_path = TEMPLATE
 
@@ -34,6 +34,13 @@ def fill_fisa(pdf_path, out_path=None, template_path=None):
     # copy template — never modify the original
     shutil.copy2(template_path, out_path)
     wb = load_workbook(out_path)
+
+    # ── ANTET (date proiect) ─────────────────────────────────────
+    if antet:
+        ws_fisa = wb.worksheets[0]  # primul sheet = Fisa
+        for cell_ref, value in antet.items():
+            if value:  # scrie doar daca nu e gol
+                ws_fisa[cell_ref] = value
 
     # ── DECO (from Plattenmaterial) ──────────────────────────────
     # PDF headers: Pos, Material, Starke, Stuck, Lange, Breite, ...
