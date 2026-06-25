@@ -40,7 +40,13 @@ def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None):
         ws_fisa = wb.worksheets[0]  # primul sheet = Fisa
         for cell_ref, value in antet.items():
             if value:  # scrie doar daca nu e gol
-                ws_fisa[cell_ref] = value
+                # B5 = nr proiect — fortat ca string ca sa nu apara "number stored as text"
+                if cell_ref == "B5":
+                    cell = ws_fisa[cell_ref]
+                    cell.value = str(value)
+                    cell.number_format = "@"
+                else:
+                    ws_fisa[cell_ref] = value
 
     # ── DECO (from Plattenmaterial) ──────────────────────────────
     # PDF headers: Pos, Material, Starke, Stuck, Lange, Breite, ...
