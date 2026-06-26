@@ -29,6 +29,8 @@ with col2:
                                                  "Liliana Chiriță", "Adrian Mărgărit", "Denisa Manea"])
     proiectat_de  = st.selectbox("Proiectat de", ["", "Client", "Plan M"])
 
+observatii = st.text_area("Observații")
+
 antet = {
     "B3": client,
     "B4": titlu,
@@ -38,6 +40,7 @@ antet = {
     "I4": tip_solicitare,
     "I5": preluat_de,
     "I6": proiectat_de,
+    "B50": observatii,
 }
 
 st.divider()
