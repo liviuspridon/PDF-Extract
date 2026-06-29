@@ -79,6 +79,9 @@ def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None):
             ws.cell(row=i, column=3).value = _num(bucata)    # C Cant
             ws.cell(row=i, column=4).value = _num(lungime)   # D Lung
             ws.cell(row=i, column=5).value = _num(net_m)     # E Net_m
+            # H = RIGHT(A,3) = ultimele 3 caractere din denumire (ex: "2.0", "0.8")
+            # scris explicit ca sa nu depinda de ordinea recalcularii formulelor
+            ws.cell(row=i, column=8).value = material[-3:] if len(material) >= 3 else material
         print(f"Cant: wrote {len(marg)-1} rows")
 
     # ── TAIERE (from Taiere) ─────────────────────────────────────
