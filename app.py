@@ -29,8 +29,6 @@ with col2:
                                                  "Liliana Chiriță", "Adrian Mărgărit", "Denisa Manea"])
     proiectat_de  = st.selectbox("Proiectat de", ["", "Client", "Plan M"])
 
-observatii = st.text_area("Observații")
-
 antet = {
     "B3": client,
     "B4": titlu,
@@ -40,7 +38,6 @@ antet = {
     "I4": tip_solicitare,
     "I5": preluat_de,
     "I6": proiectat_de,
-    "B50": observatii,
 }
 
 st.divider()
@@ -58,10 +55,19 @@ if uploaded_file:
             with open(tmp_pdf, "wb") as f:
                 f.write(uploaded_file.read())
             tables = extract_tables(tmp_pdf, "/tmp")
+        meta = tables.get("_metadata", {})
 
         st.success("Extragere finalizată!")
+        if meta.get("nr_proiect"):
+            st.info(f"Detectat automat: Nr. proiect **{meta['nr_proiect']}** — {meta['nume_proiect']}")
 
         # ── Fișa completată ───────────────────────────────────
+        # override antet with PDF metadata if fields left empty
+        if not nr_proiect and meta.get("nr_proiect"):
+            antet["B5"] = meta["nr_proiect"]
+        if not titlu and meta.get("nume_proiect"):
+            antet["B4"] = meta["nume_proiect"]
+
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
                 out_fisa = f"/tmp/{filename_stem}_fisa.xlsx"
@@ -84,6 +90,8 @@ if uploaded_file:
             header_fill = PatternFill("solid", start_color="D9E1F2")
 
             for sheet_name, rows in tables.items():
+                if sheet_name == "_metadata":
+                    continue
                 ws = wb.create_sheet(title=sheet_name[:31])
                 for r_idx, row in enumerate(rows, start=1):
                     full_row = ["Source File"] + row if r_idx == 1 else [filename_stem] + row
