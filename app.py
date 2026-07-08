@@ -58,21 +58,15 @@ if uploaded_file:
             st.info(f"Detectat automat: Nr. proiect **{meta['nr_proiect']}** — {meta['nume_proiect']}")
 
         # ── Fișa completată ───────────────────────────────────
-        # populate from PDF metadata
-        if meta.get("nr_proiect"):
-            antet["B5"] = meta["nr_proiect"]
-        if meta.get("nume_proiect"):
-            antet["B4"] = meta["nume_proiect"]
-
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
                 out_fisa = f"/tmp/{filename_stem}_fisa.xlsx"
-                fill_fisa(tmp_pdf, out_fisa, TEMPLATE_PATH, antet=antet)
+                fill_fisa(tmp_pdf, out_fisa, TEMPLATE_PATH, antet=antet, meta=meta)
             with open(out_fisa, "rb") as f:
                 st.download_button(
                     label="⬇️ Descarcă Fișa Completată",
                     data=f.read(),
-                    file_name=f"{meta.get('nr_proiect','')} - {client} - {meta.get('nume_proiect','')}.xlsx",
+                    file_name=f"{meta.get('nr_proiect','')}_{meta.get('nume_proiect','')}_{client}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
         else:

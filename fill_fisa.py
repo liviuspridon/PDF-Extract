@@ -20,7 +20,7 @@ from extract_tables import extract_tables
 TEMPLATE = os.path.join(os.path.dirname(__file__), "_FIsa_Prototip.xlsx")
 
 
-def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None):
+def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None, meta=None):
     if template_path is None:
         template_path = TEMPLATE
 
@@ -36,11 +36,21 @@ def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None):
     wb = load_workbook(out_path)
 
     # ── ANTET (date proiect) ─────────────────────────────────────
+    ws_fisa = wb.worksheets[0]  # primul sheet = Fisa
+
+    # ── Metadata din PDF (nr proiect, titlu) ────────────────────
+    if meta:
+        if meta.get("nr_proiect"):
+            cell = ws_fisa["B5"]
+            cell.value = str(meta["nr_proiect"])
+            cell.number_format = "@"
+        if meta.get("nume_proiect"):
+            ws_fisa["B4"] = meta["nume_proiect"]
+
+    # ── Antet (campuri din formular) ─────────────────────────────
     if antet:
-        ws_fisa = wb.worksheets[0]  # primul sheet = Fisa
         for cell_ref, value in antet.items():
             if value:  # scrie doar daca nu e gol
-                # B5 = nr proiect — fortat ca string ca sa nu apara "number stored as text"
                 if cell_ref == "B5":
                     cell = ws_fisa[cell_ref]
                     cell.value = str(value)
