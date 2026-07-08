@@ -72,7 +72,7 @@ if uploaded_file:
                 st.download_button(
                     label="⬇️ Descarcă Fișa Completată",
                     data=f.read(),
-                    file_name=f"{nr_proiect} - {client} - {titlu}.xlsx",
+                    file_name=f"{meta.get('nr_proiect','')} - {client} - {meta.get('nume_proiect','')}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
         else:
