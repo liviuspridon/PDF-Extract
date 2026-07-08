@@ -39,13 +39,13 @@ def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None, meta=None
     ws_fisa = wb.worksheets[0]  # primul sheet = Fisa
 
     # ── Metadata din PDF (nr proiect, titlu) ────────────────────
+    # B4:D4 si B5:D5 sunt merged cells — scriem in celula de start
     if meta:
         if meta.get("nr_proiect"):
-            cell = ws_fisa["B5"]
-            cell.value = str(meta["nr_proiect"])
-            cell.number_format = "@"
+            ws_fisa.cell(row=5, column=2).value = str(meta["nr_proiect"])
+            ws_fisa.cell(row=5, column=2).number_format = "@"
         if meta.get("nume_proiect"):
-            ws_fisa["B4"] = meta["nume_proiect"]
+            ws_fisa.cell(row=4, column=2).value = meta["nume_proiect"]
 
     # ── Antet (campuri din formular) ─────────────────────────────
     if antet:
