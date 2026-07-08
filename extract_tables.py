@@ -112,6 +112,18 @@ def extract_tables(pdf_path, out_dir="."):
 
     tables = {}
 
+    # ── Metadata (Nr proiect, Nume proiect) ─────────────────────
+    import re as _re
+    metadata = {"nr_proiect": "", "nume_proiect": ""}
+    for top, row_words in sorted(rows.items())[:10]:
+        line = " ".join(w["text"] for w in row_words)
+        m = _re.match(r"Proiect:\s*(\d{6,12})\s+(.+)", line)
+        if m:
+            metadata["nr_proiect"] = m.group(1)
+            metadata["nume_proiect"] = m.group(2).strip()
+            break
+    tables["_metadata"] = metadata
+
     # ── 1. Plattenmaterial ──────────────────────────────────────────
     y1 = find_section_top(rows, "Plattenmaterial")
     y2 = find_section_top(rows, "Material pentru margini")
