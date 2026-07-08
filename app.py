@@ -18,8 +18,6 @@ col1, col2 = st.columns(2)
 
 with col1:
     client      = st.text_input("Client")
-    titlu       = st.text_input("Titlu proiect")
-    nr_proiect  = st.text_input("Nr. proiect")
     data        = st.date_input("Data")
 
 with col2:
@@ -31,8 +29,6 @@ with col2:
 
 antet = {
     "B3": client,
-    "B4": titlu,
-    "B5": nr_proiect,
     "B6": str(data),
     "I3": tip_proiect,
     "I4": tip_solicitare,
@@ -62,10 +58,10 @@ if uploaded_file:
             st.info(f"Detectat automat: Nr. proiect **{meta['nr_proiect']}** — {meta['nume_proiect']}")
 
         # ── Fișa completată ───────────────────────────────────
-        # override antet with PDF metadata if fields left empty
-        if not nr_proiect and meta.get("nr_proiect"):
+        # populate from PDF metadata
+        if meta.get("nr_proiect"):
             antet["B5"] = meta["nr_proiect"]
-        if not titlu and meta.get("nume_proiect"):
+        if meta.get("nume_proiect"):
             antet["B4"] = meta["nume_proiect"]
 
         if os.path.exists(TEMPLATE_PATH):
