@@ -113,7 +113,8 @@ def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None, meta=None
         row_idx = 50
         for denumire, valoare in accesorii:
             if denumire or valoare:
-                ws_fisa.cell(row=row_idx, column=2).value = f"{denumire}: {valoare}" if valoare else denumire
+                ws_fisa.cell(row=row_idx, column=2).value = denumire  # B = denumire
+                ws_fisa.cell(row=row_idx, column=3).value = valoare    # C = valoare
                 row_idx += 1
 
     # tell Excel to recalculate everything on open
