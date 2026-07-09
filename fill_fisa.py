@@ -20,7 +20,7 @@ from extract_tables import extract_tables
 TEMPLATE = os.path.join(os.path.dirname(__file__), "_FIsa_Prototip.xlsx")
 
 
-def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None, meta=None):
+def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None, meta=None, accesorii=None):
     if template_path is None:
         template_path = TEMPLATE
 
@@ -106,6 +106,15 @@ def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None, meta=None
             ws.cell(row=i, column=3).value = _num(metri)        # C metri
             ws.cell(row=i, column=4).value = _num(metri_per_qm) # D metri/qm
         print(f"Taiere: wrote {len(taiere)-1} rows")
+
+    # ── Accesorii (de la B50 in jos) ────────────────────────────
+    if accesorii:
+        ws_fisa = wb.worksheets[0]
+        row_idx = 50
+        for denumire, valoare in accesorii:
+            if denumire or valoare:
+                ws_fisa.cell(row=row_idx, column=2).value = f"{denumire}: {valoare}" if valoare else denumire
+                row_idx += 1
 
     # tell Excel to recalculate everything on open
     wb.calculation.calcMode = "auto"
