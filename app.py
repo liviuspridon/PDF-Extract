@@ -8,7 +8,7 @@ from fill_fisa import fill_fisa
 
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "_FIsa_Prototip.xlsx")
 
-st.set_page_config(page_title="PDF Table Extractor", page_icon="📄")
+st.set_page_config(page_title="PDF Table Extractor", page_icon="📄", layout="wide")
 st.title("📄 Mengenkalkulation Extractor")
 
 col_stanga, col_dreapta = st.columns(2)
@@ -29,9 +29,9 @@ with col_stanga:
 
 # ── DREAPTA: Accesorii ────────────────────────────────────────
 with col_dreapta:
-    st.subheader("Accesorii")
+    with st.expander("Accesorii", expanded=False):
 
-    OPTIUNI = [
+     OPTIUNI = [
         "VB 35, culori",
         "Cabineo, culori",
         "Mâner Gola, culoare",
@@ -47,41 +47,41 @@ with col_dreapta:
         "Prinderi colț exterior",
     ]
 
-    accesorii_master = st.checkbox("Accesorii", key="chk_master")
-    accesorii = []
+     accesorii_master = st.checkbox("Accesorii", key="chk_master")
+     accesorii = []
 
-    if accesorii_master:
-        for optiune in OPTIUNI:
-            c1, c2 = st.columns([1, 2])
-            with c1:
-                bifat = st.checkbox(optiune, key=f"chk_{optiune}")
-            with c2:
-                if bifat:
-                    val = st.text_input("", key=f"val_{optiune}",
-                                        label_visibility="collapsed",
-                                        placeholder="Detalii")
-                    accesorii.append((optiune, val))
+     if accesorii_master:
+         for optiune in OPTIUNI:
+             c1, c2 = st.columns([1, 2])
+             with c1:
+                 bifat = st.checkbox(optiune, key=f"chk_{optiune}")
+             with c2:
+                 if bifat:
+                     val = st.text_input("", key=f"val_{optiune}",
+                                         label_visibility="collapsed",
+                                         placeholder="Detalii")
+                     accesorii.append((optiune, val))
 
-        # Ramă aluminiu
-        c1, c2 = st.columns([1, 2])
-        with c1:
-            rama_bifat = st.checkbox("Ramă aluminiu", key="chk_rama")
-        with c2:
-            if rama_bifat:
-                if "rama_count" not in st.session_state:
-                    st.session_state.rama_count = 1
-                for i in range(st.session_state.rama_count):
-                    val = st.text_input("", key=f"rama_{i}",
-                                        label_visibility="collapsed",
-                                        placeholder=f"Ramă aluminiu #{i+1}")
-                    label = f"Ramă aluminiu #{i+1}" if st.session_state.rama_count > 1 else "Ramă aluminiu"
-                    accesorii.append((label, val))
-                if st.button("+ Adaugă"):
-                    st.session_state.rama_count += 1
-                    st.rerun()
-            else:
-                if "rama_count" in st.session_state:
-                    del st.session_state.rama_count
+         # Ramă aluminiu
+         c1, c2 = st.columns([1, 2])
+         with c1:
+             rama_bifat = st.checkbox("Ramă aluminiu", key="chk_rama")
+         with c2:
+             if rama_bifat:
+                 if "rama_count" not in st.session_state:
+                     st.session_state.rama_count = 1
+                 for i in range(st.session_state.rama_count):
+                     val = st.text_input("", key=f"rama_{i}",
+                                         label_visibility="collapsed",
+                                         placeholder=f"Ramă aluminiu #{i+1}")
+                     label = f"Ramă aluminiu #{i+1}" if st.session_state.rama_count > 1 else "Ramă aluminiu"
+                     accesorii.append((label, val))
+                 if st.button("+ Adaugă"):
+                     st.session_state.rama_count += 1
+                     st.rerun()
+             else:
+                 if "rama_count" in st.session_state:
+                     del st.session_state.rama_count
 
 # ── Extragere ─────────────────────────────────────────────────
 antet = {
