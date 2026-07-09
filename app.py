@@ -29,57 +29,70 @@ with col_stanga:
 
 # ── DREAPTA: Accesorii ────────────────────────────────────────
 with col_dreapta:
+    accesorii = []
+
+    # ── Expander 1: Accesorii ─────────────────────────────────
     with st.expander("Accesorii", expanded=False):
+        # VB35/Cabineo Culori
+        c1, c2 = st.columns([1, 2])
+        with c1:
+            chk_vb = st.checkbox("VB35/Cabineo Culori", key="chk_vb")
+        with c2:
+            if chk_vb:
+                val = st.text_input("", key="val_vb", label_visibility="collapsed", placeholder="Detalii")
+                accesorii.append(("VB35/Cabineo Culori", val))
 
-     OPTIUNI = [
-        "VB 35, culori",
-        "Cabineo, culori",
-        "Mâner Gola, culoare",
-        "L orizontal",
-        "C orizontal",
-        "L vertical",
-        "C vertical",
-        "Prinderi L",
-        "Prinderi C",
-        "Capace L, perechi",
-        "Capace C, perechi",
-        "Prinderi colț interior",
-        "Prinderi colț exterior",
-    ]
+        # Alte Accesorii — câmpuri dinamice cu +
+        st.markdown("**Alte Accesorii**")
+        if "alte_acc_count" not in st.session_state:
+            st.session_state.alte_acc_count = 0
+        for i in range(st.session_state.alte_acc_count):
+            val = st.text_input("", key=f"alte_acc_{i}", label_visibility="collapsed",
+                                placeholder=f"Accesoriu #{i+1}")
+            accesorii.append((f"Alte Accesorii #{i+1}" if st.session_state.alte_acc_count > 1 else "Alte Accesorii", val))
+        if st.button("+ Adaugă accesoriu"):
+            st.session_state.alte_acc_count += 1
+            st.rerun()
 
-     accesorii = []
+    # ── Expander 2: GOLA ──────────────────────────────────────
+    with st.expander("GOLA", expanded=False):
+        GOLA_OPTIUNI = [
+            "Culoare",
+            "Mâner Gola, culoare",
+            "L orizontal",
+            "C orizontal",
+            "L vertical",
+            "C vertical",
+            "Prinderi L",
+            "Prinderi C",
+            "Capace L, perechi",
+            "Capace C, perechi",
+            "Prinderi colț interior",
+            "Prinderi colț exterior",
+        ]
+        for optiune in GOLA_OPTIUNI:
+            c1, c2 = st.columns([1, 2])
+            with c1:
+                bifat = st.checkbox(optiune, key=f"chk_{optiune}")
+            with c2:
+                if bifat:
+                    val = st.text_input("", key=f"val_{optiune}",
+                                        label_visibility="collapsed",
+                                        placeholder="Detalii")
+                    accesorii.append((optiune, val))
 
-     for optiune in OPTIUNI:
-         c1, c2 = st.columns([1, 2])
-         with c1:
-             bifat = st.checkbox(optiune, key=f"chk_{optiune}")
-         with c2:
-             if bifat:
-                 val = st.text_input("", key=f"val_{optiune}",
-                                     label_visibility="collapsed",
-                                     placeholder="Detalii")
-                 accesorii.append((optiune, val))
-
-     # Ramă aluminiu
-     c1, c2 = st.columns([1, 2])
-     with c1:
-         rama_bifat = st.checkbox("Ramă aluminiu", key="chk_rama")
-     with c2:
-         if rama_bifat:
-             if "rama_count" not in st.session_state:
-                 st.session_state.rama_count = 1
-             for i in range(st.session_state.rama_count):
-                 val = st.text_input("", key=f"rama_{i}",
-                                     label_visibility="collapsed",
-                                     placeholder=f"Ramă aluminiu #{i+1}")
-                 label = f"Ramă aluminiu #{i+1}" if st.session_state.rama_count > 1 else "Ramă aluminiu"
-                 accesorii.append((label, val))
-             if st.button("+ Adaugă"):
-                 st.session_state.rama_count += 1
-                 st.rerun()
-         else:
-             if "rama_count" in st.session_state:
-                 del st.session_state.rama_count
+    # ── Expander 3: Rame Aluminiu ─────────────────────────────
+    with st.expander("Rame Aluminiu", expanded=False):
+        if "rama_count" not in st.session_state:
+            st.session_state.rama_count = 0
+        for i in range(st.session_state.rama_count):
+            val = st.text_input("", key=f"rama_{i}", label_visibility="collapsed",
+                                placeholder=f"Ramă aluminiu #{i+1}")
+            label = f"Ramă aluminiu #{i+1}" if st.session_state.rama_count > 1 else "Ramă aluminiu"
+            accesorii.append((label, val))
+        if st.button("+ Adaugă ramă"):
+            st.session_state.rama_count += 1
+            st.rerun()
 
 # ── Extragere ─────────────────────────────────────────────────
 antet = {
