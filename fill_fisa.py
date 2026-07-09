@@ -110,6 +110,11 @@ def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None, meta=None
     # ── Accesorii (de la B50 in jos) ────────────────────────────
     if accesorii:
         ws_fisa = wb.worksheets[0]
+        # unmerge orice merge care acopera zona B50:S57
+        to_remove = [str(mc) for mc in ws_fisa.merged_cells.ranges
+                     if mc.min_row >= 50 and mc.min_col >= 2]
+        for mc in to_remove:
+            ws_fisa.merged_cells.remove(mc)
         row_idx = 50
         for denumire, valoare in accesorii:
             if denumire or valoare:
