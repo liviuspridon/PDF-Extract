@@ -11,22 +11,79 @@ TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "_FIsa_Prototip.xlsx")
 st.set_page_config(page_title="PDF Table Extractor", page_icon="📄")
 st.title("📄 Mengenkalkulation Extractor")
 
-# ── Câmpuri antet ─────────────────────────────────────────────
-st.subheader("Date proiect")
+col_stanga, col_dreapta = st.columns(2)
 
-col1, col2 = st.columns(2)
-
-with col1:
-    client      = st.text_input("Client")
-    data        = st.date_input("Data")
-
-with col2:
+# ── STÂNGA: Date proiect ──────────────────────────────────────
+with col_stanga:
+    st.subheader("Date proiect")
+    client         = st.text_input("Client")
+    data           = st.date_input("Data")
     tip_proiect    = st.selectbox("Tip proiect", ["", "Mobilier în Roomdesigner", "Debitare căntuire"])
     tip_solicitare = st.selectbox("Tip solicitare", ["", "Ofertă", "Comandă (cu work preparation)"])
     preluat_de     = st.selectbox("Preluat de", ["", "Dan Slotea", "David Constantin", "Iulian Necula",
                                                   "Liliana Chiriță", "Adrian Mărgărit", "Denisa Manea"])
     proiectat_de   = st.selectbox("Proiectat de", ["", "Client", "Plan M"])
 
+    st.divider()
+    uploaded_file = st.file_uploader("Încarcă PDF-ul", type="pdf")
+
+# ── DREAPTA: Accesorii ────────────────────────────────────────
+with col_dreapta:
+    st.subheader("Accesorii")
+
+    OPTIUNI = [
+        "VB 35, culori",
+        "Cabineo, culori",
+        "Mâner Gola, culoare",
+        "L orizontal",
+        "C orizontal",
+        "L vertical",
+        "C vertical",
+        "Prinderi L",
+        "Prinderi C",
+        "Capace L, perechi",
+        "Capace C, perechi",
+        "Prinderi colț interior",
+        "Prinderi colț exterior",
+    ]
+
+    accesorii_master = st.checkbox("Accesorii", key="chk_master")
+    accesorii = []
+
+    if accesorii_master:
+        for optiune in OPTIUNI:
+            c1, c2 = st.columns([1, 2])
+            with c1:
+                bifat = st.checkbox(optiune, key=f"chk_{optiune}")
+            with c2:
+                if bifat:
+                    val = st.text_input("", key=f"val_{optiune}",
+                                        label_visibility="collapsed",
+                                        placeholder="Detalii")
+                    accesorii.append((optiune, val))
+
+        # Ramă aluminiu
+        c1, c2 = st.columns([1, 2])
+        with c1:
+            rama_bifat = st.checkbox("Ramă aluminiu", key="chk_rama")
+        with c2:
+            if rama_bifat:
+                if "rama_count" not in st.session_state:
+                    st.session_state.rama_count = 1
+                for i in range(st.session_state.rama_count):
+                    val = st.text_input("", key=f"rama_{i}",
+                                        label_visibility="collapsed",
+                                        placeholder=f"Ramă aluminiu #{i+1}")
+                    label = f"Ramă aluminiu #{i+1}" if st.session_state.rama_count > 1 else "Ramă aluminiu"
+                    accesorii.append((label, val))
+                if st.button("+ Adaugă"):
+                    st.session_state.rama_count += 1
+                    st.rerun()
+            else:
+                if "rama_count" in st.session_state:
+                    del st.session_state.rama_count
+
+# ── Extragere ─────────────────────────────────────────────────
 antet = {
     "B3": client,
     "B6": str(data),
@@ -35,68 +92,6 @@ antet = {
     "I5": preluat_de,
     "I6": proiectat_de,
 }
-
-st.divider()
-
-# ── Accesorii ─────────────────────────────────────────────────
-st.subheader("Accesorii")
-
-accesorii_master = st.checkbox("Accesorii", key="chk_master")
-
-OPTIUNI = [
-    "VB 35, culori",
-    "Cabineo, culori",
-    "Mâner Gola, culoare",
-    "L orizontal",
-    "C orizontal",
-    "L vertical",
-    "C vertical",
-    "Prinderi L",
-    "Prinderi C",
-    "Capace L, perechi",
-    "Capace C, perechi",
-    "Prinderi colț interior",
-    "Prinderi colț exterior",
-]
-
-accesorii = []  # lista de (denumire, valoare) care merg in fisa
-
-if accesorii_master:
- for optiune in OPTIUNI:
-    col_a, col_b = st.columns([1, 3])
-    with col_a:
-        bifat = st.checkbox(optiune, key=f"chk_{optiune}")
-    with col_b:
-        if bifat:
-            val = st.text_input("", key=f"val_{optiune}", label_visibility="collapsed",
-                                placeholder=f"Detalii {optiune}")
-            accesorii.append((optiune, val))
-
- # Ramă aluminiu — câmpuri dinamice
- col_a, col_b = st.columns([1, 3])
- with col_a:
-     rama_bifat = st.checkbox("Ramă aluminiu", key="chk_rama")
- with col_b:
-     if rama_bifat:
-         if "rama_count" not in st.session_state:
-             st.session_state.rama_count = 1
-
-         for i in range(st.session_state.rama_count):
-             val = st.text_input("", key=f"rama_{i}", label_visibility="collapsed",
-                                 placeholder=f"Ramă aluminiu #{i+1}")
-             accesorii.append((f"Ramă aluminiu #{i+1}" if st.session_state.rama_count > 1 else "Ramă aluminiu", val))
-
-         if st.button("+ Adaugă"):
-             st.session_state.rama_count += 1
-             st.rerun()
-     else:
-         if "rama_count" in st.session_state:
-             del st.session_state.rama_count
-
-st.divider()
-
-# ── Upload PDF ────────────────────────────────────────────────
-uploaded_file = st.file_uploader("Încarcă PDF-ul", type="pdf")
 
 if uploaded_file:
     st.success(f"Fișier încărcat: {uploaded_file.name}")
@@ -114,7 +109,6 @@ if uploaded_file:
         if meta.get("nr_proiect"):
             st.info(f"Detectat automat: Nr. proiect **{meta['nr_proiect']}** — {meta['nume_proiect']}")
 
-        # ── Fișa completată ───────────────────────────────────
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
                 out_fisa = f"/tmp/{filename_stem}_fisa.xlsx"
@@ -129,7 +123,6 @@ if uploaded_file:
         else:
             st.warning("Template _FIsa_Prototip.xlsx nu a fost găsit în repository.")
 
-        # ── Excel cu toate tabelele ───────────────────────────
         with st.spinner("Se generează Excel..."):
             wb = Workbook()
             wb.remove(wb.active)
