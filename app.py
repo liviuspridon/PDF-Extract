@@ -41,6 +41,8 @@ st.divider()
 # ── Accesorii ─────────────────────────────────────────────────
 st.subheader("Accesorii")
 
+accesorii_master = st.checkbox("Accesorii", key="chk_master")
+
 OPTIUNI = [
     "VB 35, culori",
     "Cabineo, culori",
@@ -59,7 +61,8 @@ OPTIUNI = [
 
 accesorii = []  # lista de (denumire, valoare) care merg in fisa
 
-for optiune in OPTIUNI:
+if accesorii_master:
+ for optiune in OPTIUNI:
     col_a, col_b = st.columns([1, 3])
     with col_a:
         bifat = st.checkbox(optiune, key=f"chk_{optiune}")
@@ -69,26 +72,26 @@ for optiune in OPTIUNI:
                                 placeholder=f"Detalii {optiune}")
             accesorii.append((optiune, val))
 
-# Ramă aluminiu — câmpuri dinamice
-col_a, col_b = st.columns([1, 3])
-with col_a:
-    rama_bifat = st.checkbox("Ramă aluminiu", key="chk_rama")
-with col_b:
-    if rama_bifat:
-        if "rama_count" not in st.session_state:
-            st.session_state.rama_count = 1
+ # Ramă aluminiu — câmpuri dinamice
+ col_a, col_b = st.columns([1, 3])
+ with col_a:
+     rama_bifat = st.checkbox("Ramă aluminiu", key="chk_rama")
+ with col_b:
+     if rama_bifat:
+         if "rama_count" not in st.session_state:
+             st.session_state.rama_count = 1
 
-        for i in range(st.session_state.rama_count):
-            val = st.text_input("", key=f"rama_{i}", label_visibility="collapsed",
-                                placeholder=f"Ramă aluminiu #{i+1}")
-            accesorii.append((f"Ramă aluminiu #{i+1}" if st.session_state.rama_count > 1 else "Ramă aluminiu", val))
+         for i in range(st.session_state.rama_count):
+             val = st.text_input("", key=f"rama_{i}", label_visibility="collapsed",
+                                 placeholder=f"Ramă aluminiu #{i+1}")
+             accesorii.append((f"Ramă aluminiu #{i+1}" if st.session_state.rama_count > 1 else "Ramă aluminiu", val))
 
-        if st.button("+ Adaugă"):
-            st.session_state.rama_count += 1
-            st.rerun()
-    else:
-        if "rama_count" in st.session_state:
-            del st.session_state.rama_count
+         if st.button("+ Adaugă"):
+             st.session_state.rama_count += 1
+             st.rerun()
+     else:
+         if "rama_count" in st.session_state:
+             del st.session_state.rama_count
 
 st.divider()
 
