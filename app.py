@@ -130,7 +130,7 @@ if uploaded_file:
             st.warning(f"⚠️ Date proiect incomplete: {', '.join(campuri_lipsa)}")
 
         if not accesorii:
-            st.warning("⚠️ Dl. Dan te rog sa adaugi accesorii la acest proiect.")
+            st.warning("⚠️ Dl. Dan de ce nu vrei să pui accesorii la acest proiect.???")
 
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
