@@ -94,7 +94,8 @@ with col_dreapta:
             st.rerun()
 
     st.markdown("### ")
-    fara_accesorii = st.checkbox("⬜⬜⬜ Fără accesorii la acest proiect ⬜⬜⬜", key="chk_fara_acc")
+    fara_accesorii = st.checkbox("⬜  Fără accesorii la acest proiect", key="chk_fara_acc")
+    fittings_ok = st.checkbox("✅  Am generat Fitting-uri în RoomDesigner", key="chk_fittings")
 
 # ── Extragere ─────────────────────────────────────────────────
 antet = {
@@ -135,6 +136,8 @@ if uploaded_file:
             st.warning(f"⚠️ Date proiect incomplete: {', '.join(campuri_lipsa)}")
         if not accesorii and not fara_accesorii:
             st.warning("⚠️ Nu au fost adăugate accesorii la acest proiect.")
+        if not fittings_ok:
+            st.warning("⚠️ Confirmă că ai generat Fitting-urile în RoomDesigner înainte de a descărca fișa.")
 
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
@@ -143,12 +146,13 @@ if uploaded_file:
             with open(out_fisa, "rb") as f:
                 fisa_data = f.read()
             date_complete = client and tip_proiect and tip_solicitare and preluat_de and proiectat_de
+            descarca_ok = date_complete and fittings_ok
             st.download_button(
                 label="⬇️ Descarcă Fișa Completată",
                 data=fisa_data,
                 file_name=f"{meta.get('nr_proiect','')}_{meta.get('nume_proiect','')}_{client}.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                disabled=not date_complete
+                disabled=not descarca_ok
             )
             if not date_complete:
                 st.caption("⚠️ Completează toate datele proiectului pentru a descărca fișa.")
