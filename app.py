@@ -121,7 +121,9 @@ if uploaded_file:
         if meta.get("nr_proiect"):
             st.info(f"Detectat automat: Nr. proiect **{meta['nr_proiect']}** — {meta['nume_proiect']}")
 
-        # ── Avertizari toast ──────────────────────────────────
+
+
+        # ── Avertizari ────────────────────────────────────────
         campuri_lipsa = []
         if not client: campuri_lipsa.append("Client")
         if not tip_proiect: campuri_lipsa.append("Tip proiect")
@@ -129,10 +131,9 @@ if uploaded_file:
         if not preluat_de: campuri_lipsa.append("Preluat de")
         if not proiectat_de: campuri_lipsa.append("Proiectat de")
         if campuri_lipsa:
-            st.toast(f"⚠️ Date incomplete: {', '.join(campuri_lipsa)}", icon="⚠️")
-
+            st.warning(f"⚠️ Date proiect incomplete: {', '.join(campuri_lipsa)}")
         if not accesorii and not fara_accesorii:
-            st.toast("⚠️ Nu au fost adăugate accesorii la acest proiect.", icon="⚠️")
+            st.warning("⚠️ Nu au fost adăugate accesorii la acest proiect.")
 
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
