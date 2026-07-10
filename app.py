@@ -119,7 +119,7 @@ if uploaded_file:
         if meta.get("nr_proiect"):
             st.info(f"Detectat automat: Nr. proiect **{meta['nr_proiect']}** — {meta['nume_proiect']}")
 
-        # ── Avertizari ────────────────────────────────────────
+        # ── Avertizari toast ──────────────────────────────────
         campuri_lipsa = []
         if not client: campuri_lipsa.append("Client")
         if not tip_proiect: campuri_lipsa.append("Tip proiect")
@@ -127,22 +127,27 @@ if uploaded_file:
         if not preluat_de: campuri_lipsa.append("Preluat de")
         if not proiectat_de: campuri_lipsa.append("Proiectat de")
         if campuri_lipsa:
-            st.warning(f"⚠️ Date proiect incomplete: {', '.join(campuri_lipsa)}")
+            st.toast(f"⚠️ Date incomplete: {', '.join(campuri_lipsa)}", icon="⚠️")
 
-        if not accesorii:
-            st.warning("⚠️ Dl. Dan de ce nu vrei să pui accesorii la acest proiect.???")
+        if not accesorii and not fara_accesorii:
+            st.toast("⚠️ Nu au fost adăugate accesorii la acest proiect.", icon="⚠️")
 
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
                 out_fisa = f"/tmp/{filename_stem}_fisa.xlsx"
                 fill_fisa(tmp_pdf, out_fisa, TEMPLATE_PATH, antet=antet, meta=meta, accesorii=accesorii)
             with open(out_fisa, "rb") as f:
-                st.download_button(
-                    label="⬇️ Descarcă Fișa Completată",
-                    data=f.read(),
-                    file_name=f"{meta.get('nr_proiect','')}_{meta.get('nume_proiect','')}_{client}.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
+                fisa_data = f.read()
+            date_complete = client and tip_proiect and tip_solicitare and preluat_de and proiectat_de
+            st.download_button(
+                label="⬇️ Descarcă Fișa Completată",
+                data=fisa_data,
+                file_name=f"{meta.get('nr_proiect','')}_{meta.get('nume_proiect','')}_{client}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                disabled=not date_complete
+            )
+            if not date_complete:
+                st.caption("⚠️ Completează toate datele proiectului pentru a descărca fișa.")
         else:
             st.warning("Template _FIsa_Prototip.xlsx nu a fost găsit în repository.")
 
