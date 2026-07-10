@@ -119,6 +119,19 @@ if uploaded_file:
         if meta.get("nr_proiect"):
             st.info(f"Detectat automat: Nr. proiect **{meta['nr_proiect']}** — {meta['nume_proiect']}")
 
+        # ── Avertizari ────────────────────────────────────────
+        campuri_lipsa = []
+        if not client: campuri_lipsa.append("Client")
+        if not tip_proiect: campuri_lipsa.append("Tip proiect")
+        if not tip_solicitare: campuri_lipsa.append("Tip solicitare")
+        if not preluat_de: campuri_lipsa.append("Preluat de")
+        if not proiectat_de: campuri_lipsa.append("Proiectat de")
+        if campuri_lipsa:
+            st.warning(f"⚠️ Date proiect incomplete: {', '.join(campuri_lipsa)}")
+
+        if not accesorii:
+            st.warning("⚠️ Nu au fost adăugate accesorii la acest proiect.")
+
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
                 out_fisa = f"/tmp/{filename_stem}_fisa.xlsx"
