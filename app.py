@@ -58,7 +58,6 @@ with col_dreapta:
     with st.expander("GOLA", expanded=False):
         GOLA_OPTIUNI = [
             "Culoare",
-            "Mâner Gola, culoare",
             "L orizontal",
             "C orizontal",
             "L vertical",

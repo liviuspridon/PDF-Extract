@@ -116,11 +116,29 @@ def fill_fisa(pdf_path, out_path=None, template_path=None, antet=None, meta=None
         for mc in to_remove:
             ws_fisa.merged_cells.remove(mc)
         row_idx = 50
+        # grupuri pentru rand liber intre ele
+        grup_accesorii = {"VB35/Cabineo Culori"} | {f"Alte Accesorii #{i}" for i in range(1,50)} | {"Alte Accesorii"}
+        grup_gola = {"Culoare", "L orizontal", "C orizontal", "L vertical", "C vertical",
+                     "Prinderi L", "Prinderi C", "Capace L, perechi", "Capace C, perechi",
+                     "Prinderi colț interior", "Prinderi colț exterior"}
+        grup_rame = {f"Ramă aluminiu #{i}" for i in range(1,50)} | {"Ramă aluminiu"}
+
+        def get_grup(den):
+            if den in grup_accesorii: return "acc"
+            if den in grup_gola: return "gola"
+            if den in grup_rame: return "rame"
+            return "other"
+
+        last_grup = None
         for denumire, valoare in accesorii:
             if denumire or valoare:
-                ws_fisa.cell(row=row_idx, column=2).value = denumire  # B = denumire
-                ws_fisa.cell(row=row_idx, column=3).value = valoare    # C = valoare
+                crt_grup = get_grup(denumire)
+                if last_grup and crt_grup != last_grup:
+                    row_idx += 1  # rand liber intre grupuri
+                ws_fisa.cell(row=row_idx, column=2).value = denumire
+                ws_fisa.cell(row=row_idx, column=3).value = valoare
                 row_idx += 1
+                last_grup = crt_grup
 
     # tell Excel to recalculate everything on open
     wb.calculation.calcMode = "auto"
