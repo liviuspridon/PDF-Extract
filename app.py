@@ -36,11 +36,11 @@ with col_dreapta:
         # VB35/Cabineo Culori
         c1, c2 = st.columns([1, 2])
         with c1:
-            chk_vb = st.checkbox("VB35/Cabineo Culori", key="chk_vb")
+            st.markdown("VB35/Cabineo Culori")
         with c2:
-            if chk_vb:
-                val = st.text_input("", key="val_vb", label_visibility="collapsed", placeholder="Detalii")
-                accesorii.append(("VB35/Cabineo Culori", val))
+            val_vb = st.text_input("", key="val_vb", label_visibility="collapsed", placeholder="Detalii")
+            if val_vb:
+                accesorii.append(("VB35/Cabineo Culori", val_vb))
 
         # Alte Accesorii — câmpuri dinamice cu +
         st.markdown("**Alte Accesorii**")
@@ -72,12 +72,12 @@ with col_dreapta:
         for optiune in GOLA_OPTIUNI:
             c1, c2 = st.columns([1, 2])
             with c1:
-                bifat = st.checkbox(optiune, key=f"chk_{optiune}")
+                st.markdown(optiune)
             with c2:
-                if bifat:
-                    val = st.text_input("", key=f"val_{optiune}",
-                                        label_visibility="collapsed",
-                                        placeholder="Detalii")
+                val = st.text_input("", key=f"val_{optiune}",
+                                    label_visibility="collapsed",
+                                    placeholder="Detalii")
+                if val:
                     accesorii.append((optiune, val))
 
     # ── Expander 3: Rame Aluminiu ─────────────────────────────
