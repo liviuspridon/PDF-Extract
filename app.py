@@ -93,6 +93,8 @@ with col_dreapta:
             st.session_state.rama_count += 1
             st.rerun()
 
+fara_accesorii = st.checkbox("Fără accesorii la acest proiect", key="chk_fara_acc")
+
 # ── Extragere ─────────────────────────────────────────────────
 antet = {
     "B3": client,
