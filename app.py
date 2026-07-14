@@ -32,7 +32,7 @@ with col_dreapta:
     accesorii = []
 
     # ── Expander 1: Accesorii ─────────────────────────────────
-    with st.expander("Accesorii", expanded=False):
+    with st.expander("Accesorii suplimentare", expanded=False):
         # VB35/Cabineo Culori
         c1, c2 = st.columns([1, 2])
         with c1:
@@ -94,7 +94,7 @@ with col_dreapta:
             st.rerun()
 
     st.markdown("### ")
-    fara_accesorii = st.checkbox("▶️ Fără accesorii la acest proiect ◀️", key="chk_fara_acc")
+    fara_accesorii = st.checkbox("▶️ Fără accesorii suplimentare la acest proiect ◀️", key="chk_fara_acc")
     fittings_ok = st.checkbox("🛑  Am generat Fitting-uri în RoomDesigner 🛑", key="chk_fittings")
 
 # ── Extragere ─────────────────────────────────────────────────
