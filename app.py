@@ -32,7 +32,7 @@ with col_dreapta:
     accesorii = []
 
     # ── Expander 1: Accesorii ─────────────────────────────────
-    with st.expander("Accesorii suplimentare", expanded=False):
+    with st.expander("Accesorii", expanded=False):
         # VB35/Cabineo Culori
         c1, c2 = st.columns([1, 2])
         with c1:
@@ -94,8 +94,8 @@ with col_dreapta:
             st.rerun()
 
     st.markdown("### ")
-    fara_accesorii = st.checkbox("▶️ Fără accesorii suplimentare la acest proiect ◀️", key="chk_fara_acc")
-    fittings_ok = st.checkbox("🛑  Am generat Fitting-uri în RoomDesigner 🛑", key="chk_fittings")
+    fara_accesorii = st.checkbox("⬜  Fără accesorii la acest proiect", key="chk_fara_acc")
+    fittings_ok = st.checkbox("✅  Am generat Fitting-uri în RoomDesigner", key="chk_fittings")
 
 # ── Extragere ─────────────────────────────────────────────────
 antet = {
@@ -150,7 +150,7 @@ if uploaded_file:
             st.download_button(
                 label="⬇️ Descarcă Fișa Completată",
                 data=fisa_data,
-                file_name=f"{meta.get('nr_proiect','')}_{meta.get('nume_proiect','')}_{client}.xlsx",
+                file_name=f"{meta.get('nr_proiect','')}_{client}_{meta.get('nume_proiect','')}.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 disabled=not descarca_ok
             )
