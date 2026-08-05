@@ -96,6 +96,7 @@ with col_dreapta:
     st.markdown("### ")
     fara_accesorii = st.checkbox("⬜  Fără accesorii suplimentare la acest proiect", key="chk_fara_acc")
     fittings_ok = st.checkbox("✅  Am generat Fitting-uri în RoomDesigner", key="chk_fittings")
+    ek_ok = st.checkbox("✅  Am calculat EK pentru acest proiect", key="chk_fittings")
 
 # ── Extragere ─────────────────────────────────────────────────
 antet = {
@@ -138,7 +139,8 @@ if uploaded_file:
             st.warning("⚠️ Nu au fost adăugate accesorii la acest proiect.")
         if not fittings_ok:
             st.warning("⚠️ Confirmă că ai generat Fitting-urile în RoomDesigner înainte de a descărca fișa.")
-
+        if not ek_ok:
+            st.warning("⚠️ Confirmă că ai calculat EK pentru proiectul curent înainte de a descărca fișa.")
         if os.path.exists(TEMPLATE_PATH):
             with st.spinner("Se completează fișa..."):
                 out_fisa = f"/tmp/{filename_stem}_fisa.xlsx"
@@ -146,7 +148,7 @@ if uploaded_file:
             with open(out_fisa, "rb") as f:
                 fisa_data = f.read()
             date_complete = client and tip_proiect and tip_solicitare and preluat_de and proiectat_de
-            descarca_ok = date_complete and fittings_ok
+            descarca_ok = date_complete and fittings_ok and ek_ok
             st.download_button(
                 label="⬇️ Descarcă Fișa Completată",
                 data=fisa_data,
