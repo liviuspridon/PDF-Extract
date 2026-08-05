@@ -96,7 +96,7 @@ with col_dreapta:
     st.markdown("### ")
     fara_accesorii = st.checkbox("⬜  Fără accesorii suplimentare la acest proiect", key="chk_fara_acc")
     fittings_ok = st.checkbox("✅  Am generat Fitting-uri în RoomDesigner", key="chk_fittings")
-    ek_ok = st.checkbox("✅  Am calculat EK pentru acest proiect", key="chk_fittings")
+    ek_ok = st.checkbox("✅  Am calculat EK pentru acest proiect", key="chk_ek")
 
 # ── Extragere ─────────────────────────────────────────────────
 antet = {
